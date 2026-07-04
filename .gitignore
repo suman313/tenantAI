@@ -1,0 +1,7 @@
+/credentials.json
+/.env
+/PropertyMaintenanceAgentCredentials.json
+/token.pickle
+*.pickle
+__pycache__/
+*.py[cod]
