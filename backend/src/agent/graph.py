@@ -10,9 +10,14 @@
 from langgraph.graph import StateGraph, END
 from src.agent.state import AgentState
 from src.agent.nodes import (
-    classify_node, save_node, dispatch_node,
-    notify_node, reply_node, mark_read_node
+    classify_node,
+    save_node,
+    dispatch_node,
+    notify_node,
+    reply_node,
+    mark_read_node,
 )
+
 
 def should_continue(state: AgentState) -> str:
     """If any step sets an error, stop cooking and send the dish back."""
@@ -20,13 +25,14 @@ def should_continue(state: AgentState) -> str:
         return "error"
     return "continue"
 
+
 def build_graph():
     workflow = StateGraph(AgentState)
 
     # Add all kitchen stations
     workflow.add_node("classify", classify_node)
-    workflow.add_node("save", save_node)
     workflow.add_node("dispatch", dispatch_node)
+    workflow.add_node("save", save_node)
     workflow.add_node("notify", notify_node)
     workflow.add_node("reply", reply_node)
     workflow.add_node("mark_read", mark_read_node)
@@ -34,14 +40,26 @@ def build_graph():
     workflow.set_entry_point("classify")
 
     # Wire stations in order, with a safety valve at each
-    workflow.add_conditional_edges("classify", should_continue, {"continue": "save", "error": END})
-    workflow.add_conditional_edges("save", should_continue, {"continue": "dispatch", "error": END})
-    workflow.add_conditional_edges("dispatch", should_continue, {"continue": "notify", "error": END})
-    workflow.add_conditional_edges("notify", should_continue, {"continue": "reply", "error": END})
-    workflow.add_conditional_edges("reply", should_continue, {"continue": "mark_read", "error": END})
+    workflow.add_conditional_edges(
+        "classify", should_continue, {"continue": "dispatch", "error": END}
+    )
+
+    workflow.add_conditional_edges(
+        "dispatch", should_continue, {"continue": "save", "error": END}
+    )
+    workflow.add_conditional_edges(
+        "save", should_continue, {"continue": "notify", "error": END}
+    )
+    workflow.add_conditional_edges(
+        "notify", should_continue, {"continue": "reply", "error": END}
+    )
+    workflow.add_conditional_edges(
+        "reply", should_continue, {"continue": "mark_read", "error": END}
+    )
     workflow.add_edge("mark_read", END)
 
     return workflow.compile()
+
 
 def process_email(email_data: dict):
     """Run the full kitchen pipeline for one order (email)."""

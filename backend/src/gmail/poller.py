@@ -15,7 +15,7 @@ def get_unread_maintenance_emails(query='subject:maintenance OR "leaking" OR "re
 
     # Search for unread messages matching query
     results = (
-        service.users().messages().list(userId="me", q=f"is:unread {query}").execute()
+        service.users().messages().list(userId="me", q=f"{query}").execute()
     )
 
     messages = results.get("messages", [])

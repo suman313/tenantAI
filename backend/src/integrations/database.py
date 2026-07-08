@@ -33,6 +33,8 @@ def init_db():
         conn.execute("""
             CREATE TABLE IF NOT EXISTS requests (
                 id INTEGER PRIMARY KEY AUTOINCREMENT,
+                email_id TEXT,            
+                thread_id TEXT, 
                 tenant_email TEXT NOT NULL,
                 issue_type TEXT NOT NULL,
                 urgency TEXT NOT NULL,
@@ -40,6 +42,8 @@ def init_db():
                 tenant_phone TEXT,
                 access_instructions TEXT,
                 summary TEXT,
+                contractor_name TEXT,
+                contractor_phone TEXT,                
                 status TEXT DEFAULT 'received',
                 created_at DATETIME DEFAULT CURRENT_TIMESTAMP
             )
@@ -47,19 +51,26 @@ def init_db():
         conn.commit()
 
 
-def save_request(req: MaintenanceRequest, tenant_email: str) -> int:
-    """
-    Write a new maintenance request into the ledger.
-    Returns the tracking number (request ID).
-    """
+def save_request(
+    req: MaintenanceRequest,
+    tenant_email: str,
+    email_id: str = None,
+    thread_id: str = None,
+    contractor_name: str = None,
+    contractor_phone: str = None,
+) -> int:
     with _get_connection() as conn:
         cursor = conn.execute(
             """
             INSERT INTO requests 
-                (tenant_email, issue_type, urgency, unit_number, tenant_phone, access_instructions, summary)
-            VALUES (?, ?, ?, ?, ?, ?, ?)
+                (email_id, thread_id, tenant_email, issue_type, urgency,
+                 unit_number, tenant_phone, access_instructions, summary,
+                 contractor_name, contractor_phone)
+            VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
             """,
             (
+                email_id,
+                thread_id,
                 tenant_email,
                 req.issue_type,
                 req.urgency,
@@ -67,6 +78,8 @@ def save_request(req: MaintenanceRequest, tenant_email: str) -> int:
                 req.tenant_phone,
                 req.access_instructions,
                 req.summary,
+                contractor_name,
+                contractor_phone,
             ),
         )
         conn.commit()

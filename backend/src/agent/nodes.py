@@ -35,11 +35,14 @@ def classify_node(state: AgentState) -> dict:
 
 
 def save_node(state: AgentState) -> dict:
-    """
-    Write the maintenance request to the ledger (database).
-    Returns the tracking number.
-    """
-    request_id = save_request(state["maintenance_request"], state["tenant_email"])
+    request_id = save_request(
+        state["maintenance_request"],
+        state["tenant_email"],
+        email_id=state["email_id"],
+        thread_id=state["thread_id"],
+        contractor_name=state["contractor_name"],
+        contractor_phone=state["contractor_phone"],
+    )
     return {"request_id": request_id}
 
 
