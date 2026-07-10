@@ -1,5 +1,5 @@
 # test_contractors.py
-from src.integrations.contractors import find_contractor
+from backend.src.integrations.contractors import find_contractor
 
 name, phone = find_contractor("HVAC")
 print(f"HVAC → {name} ({phone})")

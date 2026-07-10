@@ -1,6 +1,6 @@
 # test_database.py
-from src.integrations.database import init_db, save_request
-from src.agent.classifier import MaintenanceRequest
+from backend.src.integrations.database import init_db, save_request
+from backend.src.agent.classifier import MaintenanceRequest
 
 init_db()
 print("✅ Database ready")

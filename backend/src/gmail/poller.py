@@ -1,23 +1,29 @@
 # src/gmail/poller.py
 import base64
 from googleapiclient.discovery import build
-from src.gmail.auth import get_creds
+from .auth import get_creds
 
 
-def get_unread_maintenance_emails(query='subject:maintenance OR "leaking" OR "repair"'):
-    """
-    Fetches unread emails matching a query.
-    Default query looks for common maintenance keywords.
-    Returns list of dicts with id, threadId, subject, from, body.
-    """
+def get_unread_maintenance_emails(query=None):
+    if query is None:
+        keywords = (
+            'leaking OR leak OR repair OR broken OR "not working" '
+            "OR sparking OR crack OR infestation OR clogged OR mold OR pest OR HVAC OR plumbing OR electrical"
+        )
+        # Only emails from the last 2 days
+        query = f"is:unread newer_than:2d ({keywords})"
+    else:
+        # If a custom query is provided, still ensure it's unread
+        if "is:unread" not in query:
+            query = f"is:unread {query}"
+        # Optionally add date filter to custom queries too
+        if "newer_than" not in query and "after" not in query:
+            query += " newer_than:2d"
+
     creds = get_creds()
     service = build("gmail", "v1", credentials=creds)
 
-    # Search for unread messages matching query
-    results = (
-        service.users().messages().list(userId="me", q=f"{query}").execute()
-    )
-
+    results = service.users().messages().list(userId="me", q=query).execute()
     messages = results.get("messages", [])
     emails = []
 
@@ -28,14 +34,12 @@ def get_unread_maintenance_emails(query='subject:maintenance OR "leaking" OR "re
             .get(userId="me", id=msg["id"], format="full")
             .execute()
         )
-
         headers = msg_data["payload"]["headers"]
         subject = next(
             (h["value"] for h in headers if h["name"] == "Subject"), "No Subject"
         )
         sender = next((h["value"] for h in headers if h["name"] == "From"), "Unknown")
 
-        # Get body (handle plain text or html)
         body = ""
         if "parts" in msg_data["payload"]:
             for part in msg_data["payload"]["parts"]:

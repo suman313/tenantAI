@@ -14,9 +14,12 @@
 
 import sqlite3
 from pathlib import Path
-from src.agent.classifier import MaintenanceRequest
 
-DB_PATH = Path(__file__).resolve().parent.parent.parent / "data" / "maintenance.db"
+from ..agent.classifier import MaintenanceRequest
+
+DB_PATH = (
+    Path(__file__).resolve().parent.parent.parent.parent / "data" / "maintenance.db"
+)
 
 
 def _get_connection():

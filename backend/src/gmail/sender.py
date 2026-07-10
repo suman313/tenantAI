@@ -14,7 +14,7 @@
 import base64
 from email.mime.text import MIMEText
 from googleapiclient.discovery import build
-from src.gmail.auth import get_creds
+from .auth import get_creds
 
 def reply_to_tenant(thread_id: str, tenant_email: str, request_id: int, issue_type: str, contractor_name: str):
     """

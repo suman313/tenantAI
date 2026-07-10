@@ -10,7 +10,7 @@ from fastapi import FastAPI, HTTPException, Depends
 from fastapi.middleware.cors import CORSMiddleware
 from pydantic import BaseModel
 from typing import List, Optional
-from src.integrations.database import _get_connection, init_db
+from backend.src.integrations.database import _get_connection, init_db
 from .auth import verify_password
 
 app = FastAPI(title="Property AI Agent")

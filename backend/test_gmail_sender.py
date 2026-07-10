@@ -1,5 +1,5 @@
 # test_gmail_sender.py
-from src.gmail.sender import reply_to_tenant
+from backend.src.gmail.sender import reply_to_tenant
 
 # Use YOUR own email and a fake thread ID from a test email you already received
 # You can get a threadId from test_gmail.py output

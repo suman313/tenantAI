@@ -1,5 +1,11 @@
 # view_requests.py
-from src.integrations.database import _get_connection
+import sys
+from pathlib import Path
+
+if str(Path(__file__).resolve().parents[1]) not in sys.path:
+    sys.path.insert(0, str(Path(__file__).resolve().parents[1]))
+
+from backend.src.integrations.database import _get_connection
 
 conn = _get_connection()
 rows = conn.execute("""

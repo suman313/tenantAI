@@ -15,14 +15,14 @@
 
 from googleapiclient.discovery import build
 
-from src.agent.state import AgentState
-from src.agent.classifier import classify_email
-from src.integrations.database import save_request
-from src.integrations.contractors import find_contractor
-from src.integrations.twilio import send_whatsapp
-from src.gmail.sender import reply_to_tenant
-from src.gmail.auth import get_creds
-from src.gmail.poller import mark_as_read as _mark_as_read
+from .state import AgentState
+from .classifier import classify_email
+from ..integrations.database import save_request
+from ..integrations.contractors import find_contractor
+from ..integrations.twilio import send_whatsapp
+from ..gmail.sender import reply_to_tenant
+from ..gmail.auth import get_creds
+from ..gmail.poller import mark_as_read as _mark_as_read
 
 
 def classify_node(state: AgentState) -> dict:
@@ -32,6 +32,13 @@ def classify_node(state: AgentState) -> dict:
     """
     result = classify_email(state["email_body"])
     return {"maintenance_request": result}
+
+
+def validate_node(state: AgentState) -> dict:
+    """Stop the pipeline if the email isn't a real maintenance request."""
+    if not state["maintenance_request"].is_valid:
+        return {"error": "Not a valid maintenance request"}
+    return {}
 
 
 def save_node(state: AgentState) -> dict:
@@ -68,6 +75,7 @@ def notify_node(state: AgentState) -> dict:
         f"Tenant: {state['tenant_email']}\n"
         f"Summary: {request.summary}"
     )
+    print(f"📲 Sending WhatsApp message:\n{message}\n---")
     send_whatsapp(state["contractor_phone"], message)
     return {}
 

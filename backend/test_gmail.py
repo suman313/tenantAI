@@ -1,5 +1,5 @@
 # test_gmail.py
-from src.gmail.poller import get_unread_maintenance_emails
+from backend.src.gmail.poller import get_unread_maintenance_emails
 
 # emails = get_unread_maintenance_emails()
 # for em in emails:

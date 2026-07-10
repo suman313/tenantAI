@@ -10,6 +10,9 @@ load_dotenv()
 
 
 class MaintenanceRequest(BaseModel):
+    is_valid: bool = Field(
+        description="True if this is a real tenant maintenance request, False if it's a newsletter, spam, bank alert, etc."
+    )
     issue_type: str = Field(
         description="Plumbing, Electrical, HVAC, Appliance, Structural, Pest, Other"
     )
@@ -22,7 +25,7 @@ class MaintenanceRequest(BaseModel):
 
 def classify_email(email_body: str) -> MaintenanceRequest:
     # Use a free/cheap model; change to paid ones for production
-    model = "nvidia/nemotron-3-ultra-550b-a55b:free"  # or "meta-llama/llama-4-maverick:free"
+    model = "openai/gpt-4o-mini"  # or "meta-llama/llama-4-maverick:free"
 
     llm = ChatOpenAI(
         model=model,
@@ -35,17 +38,18 @@ def classify_email(email_body: str) -> MaintenanceRequest:
         [
             (
                 "system",
-                """You extract structured maintenance request data from tenant emails.
-Return ONLY a valid JSON object with these keys:
-- issue_type (one of: Plumbing, Electrical, HVAC, Appliance, Structural, Pest, Other)
-- urgency (one of: low, medium, high, emergency)
-- unit_number (string, or "unknown")
-- tenant_phone (string, or "none")
-- access_instructions (string, or "none")
-- summary (one sentence)
+                """You are a property management assistant. Determine if the email is a genuine tenant maintenance request, then extract details.
 
-If a field is missing, use the defaults: "unknown", "none", "none".
-No explanations, no markdown, just the JSON object.""",
+- If the email is NOT a maintenance request (newsletter, advertisement, bank notification, system alert, etc.), set "is_valid": false and leave all other fields as their default values ("Other", "low", "unknown", "none", "none", "").
+- If it IS a maintenance request, set "is_valid": true and extract the fields as follows:
+  - issue_type: Plumbing / Electrical / HVAC / Appliance / Structural / Pest / Other
+  - urgency: low / medium / high / emergency
+  - unit_number: the apartment/unit number if mentioned, else "unknown"
+  - tenant_phone: any phone number provided, else "none"
+  - access_instructions: any access info, else "none"
+  - summary: one sentence summary of the problem
+
+Return ONLY valid JSON. No explanation, no markdown.""",
             ),
             ("human", "{email_body}"),
         ]
@@ -62,4 +66,6 @@ No explanations, no markdown, just the JSON object.""",
             content = content[:-3]
 
     data = json.loads(content)
+    # Ensure is_valid is always a bool
+    data["is_valid"] = bool(data.get("is_valid", False))
     return MaintenanceRequest(**data)

@@ -7,7 +7,8 @@
 # ==============================================
 
 from typing import TypedDict, Optional
-from src.agent.classifier import MaintenanceRequest
+
+from .classifier import MaintenanceRequest
 
 class AgentState(TypedDict):
     email_id: str

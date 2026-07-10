@@ -1,5 +1,5 @@
 # test_classifier.py
-from src.agent.classifier import classify_email
+from backend.src.agent.classifier import classify_email
 
 test_email = """
 Subject: Water leaking from ceiling in Apt 4B

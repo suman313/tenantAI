@@ -14,12 +14,12 @@
 # The clipboard — you update this once, everything else stays the same
 CONTRACTOR_DIRECTORY = {
     "Plumbing": ("Raju's Plumbing", "+91-6289565427"),
-    "Electrical": ("Kiran Electricals", "+91-99999-22222"),
-    "HVAC": ("CoolAir Services", "+91-99999-33333"),
-    "Appliance": ("FixIt Appliances", "+91-99999-44444"),
-    "Structural": ("BuildRight Repairs", "+91-99999-55555"),
-    "Pest": ("PestFree India", "+91-99999-66666"),
-    "Other": ("General Maintenance", "+91-99999-00000"),
+    "Electrical": ("Kiran Electricals", "+91-6289565427"),
+    "HVAC": ("CoolAir Services", "+91-6289565427"),
+    "Appliance": ("FixIt Appliances", "+91-6289565427"),
+    "Structural": ("BuildRight Repairs", "+91-6289565427"),
+    "Pest": ("PestFree India", "+91-6289565427"),
+    "Other": ("General Maintenance", "+91-6289565427"),
 }
 
 

@@ -14,7 +14,7 @@
 
 ## 🎥 Demo
 
-[![Demo Video](https://img.youtube.com/vi/YOUR_VIDEO_ID/0.jpg)](https://youtu.be/YOUR_VIDEO_ID)
+[![Demo Video](https://img.youtube.com/vi/YOUR_VIDEO_ID/0.jpg)](https://youtu.be/YzdHttviDoA)
 
 *2‑minute walkthrough: email ingestion → LLM classification → WhatsApp dispatch → dashboard update.*
 
