@@ -206,7 +206,7 @@ No‑code tools can do “if email contains X → send Slack message”. TenantA
 
 ## 📄 License
 
-MIT © [Your Name]
+MIT © Suman Modak
 
 ---
 
