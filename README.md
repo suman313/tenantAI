@@ -132,7 +132,7 @@ The entire workflow is orchestrated by a **LangGraph StateGraph** with condition
 
 ### 1. Clone the repository
 ```bash
-git clone https://github.com/yourusername/tenantAI.git
+git clone https://github.com/suman313/tenantAI.git
 cd tenantAI
 ```
 
